@@ -563,16 +563,18 @@ function syncSpeakerPortrait(){
   const panel=document.querySelector('.panel');if(!panel)return;
   const name=content.querySelector('.story-bubble .speaker,.speaker')?.textContent.trim();
   let portrait=panel.querySelector('#speakerPortrait');
-  if(!name||!SPEAKER_IMAGES[name]||document.body.dataset.castMode==='roster'){
+  const firstSceneHasLumia=name==='루미아'&&(img.src===ASSETS.academy||img.src.includes('scene-01.webp'));
+  if(!name||!SPEAKER_IMAGES[name]||document.body.dataset.castMode==='roster'||firstSceneHasLumia){
     if(portrait)portrait.remove();return;
   }
   const isStorySpeech=!!content.querySelector('.story-bubble .dialogue');
   const hasInteraction=!!content.querySelector('.choices:not([hidden]),.checklist,.expanded-spells:not([hidden])');
   const showLarge=isStorySpeech&&!hasInteraction&&!lens.classList.contains('show')&&!el('inventory').classList.contains('show')&&!el('stageMagic').classList.contains('show');
-  if(portrait?.dataset.speaker===name){portrait.classList.toggle('large',showLarge);return}
+  if(!showLarge){if(portrait)portrait.remove();return}
+  if(portrait?.dataset.speaker===name)return;
   if(!portrait){portrait=document.createElement('div');portrait.id='speakerPortrait';portrait.className='speaker-portrait';portrait.setAttribute('aria-hidden','true');panel.prepend(portrait)}
   portrait.dataset.speaker=name;
-  portrait.classList.toggle('large',showLarge);
+  portrait.classList.add('large');
   portrait.innerHTML=`<img src="${SPEAKER_IMAGES[name]}" alt="" draggable="false">`;
 }
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
