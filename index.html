@@ -564,7 +564,10 @@ function syncSpeakerPortrait(){
   const name=content.querySelector('.story-bubble .speaker,.speaker')?.textContent.trim();
   let portrait=panel.querySelector('#speakerPortrait');
   const firstSceneHasLumia=name==='루미아'&&(img.src===ASSETS.academyLumia||img.src===ASSETS.academy||img.src.includes('scene-01.webp'));
-  if(!name||!SPEAKER_IMAGES[name]||document.body.dataset.castMode==='roster'||firstSceneHasLumia){
+  const characterAlreadyOnStage=!!name&&[...el('castLayer').querySelectorAll('.cast-sprite,.cast-portrait')].some(character=>character.getAttribute('src')===SPEAKER_IMAGES[name]);
+  const sceneryWithoutPeople=new Set([ASSETS.academy,ASSETS.lakeOpen,ASSETS.lakeFreezing,ASSETS.lakeFrozen,ASSETS.forestScent,ASSETS.forestEntrance,ASSETS.forestFlood,ASSETS.forestCleared,ASSETS.potionSource,ASSETS.potionSealed,ASSETS.cloudDry,ASSETS.cloudBeading,ASSETS.cloudFlow,ASSETS.crystalMine,ASSETS.crystalRestored,ASSETS.crystalChasm,ASSETS.crystalBridge,ASSETS.starTempleEmpty,ASSETS.starTempleBridge]);
+  const sceneHasPeople=!sceneryWithoutPeople.has(img.src)||!!el('castLayer').querySelector('.cast-sprite,.cast-portrait');
+  if(!name||!SPEAKER_IMAGES[name]||document.body.dataset.castMode==='roster'||firstSceneHasLumia||characterAlreadyOnStage||sceneHasPeople){
     if(portrait)portrait.remove();return;
   }
   const isStorySpeech=!!content.querySelector('.story-bubble .dialogue');
