@@ -563,7 +563,7 @@ function syncSpeakerPortrait(){
   const panel=document.querySelector('.panel');if(!panel)return;
   const name=content.querySelector('.story-bubble .speaker,.speaker')?.textContent.trim();
   let portrait=panel.querySelector('#speakerPortrait');
-  const firstSceneHasLumia=name==='루미아'&&(img.src===ASSETS.academy||img.src.includes('scene-01.webp'));
+  const firstSceneHasLumia=name==='루미아'&&(img.src===ASSETS.academyLumia||img.src===ASSETS.academy||img.src.includes('scene-01.webp'));
   if(!name||!SPEAKER_IMAGES[name]||document.body.dataset.castMode==='roster'||firstSceneHasLumia){
     if(portrait)portrait.remove();return;
   }
