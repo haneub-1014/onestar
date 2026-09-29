@@ -858,12 +858,12 @@ function answerDiffusion(index,button){state.attempts.diffusion++;record('diffus
  {speaker:'테라',text:'얼음 성의 고체는 가까이 모여 제자리에서 떨었어. 호수의 액체는 자리를 바꾸며 움직였지. 기체는 같은 입자들이 더 멀리 떨어져 자유롭게 움직이는 모습이야.'},
  {speaker:'루미아',text:'세 상태를 비교해 보니 입자는 멈춰 있지 않고 끊임없이 운동하는구나. 숲속으로 더 들어가 보자.'}],forestFlood)}
 function forestFlood(){state.step=5;storySequence({image:ASSETS.forestFlood,title:'물에 잠긴 숲길을 다시 드러내자.',scene:5},[
- {speaker:'피코',text:'숲길이 물에 잠겼어! 이대로면 룬이 있는 곳으로 갈 수 없어.'},
- {speaker:'이그니스',text:'먼저 렌즈로 길 위의 상태를 확인하자. 얼음 숨결 대신 아까 배운 새 기술을 여기서 연습해 볼까?'}],forestFloodLens)}
+ {speaker:'피코',text:'숲길이 물에 잠겼어! 바닥에 새겨진 룬의 흔적도 가려져서 어느 쪽으로 가야 할지 모르겠어.'},
+ {speaker:'이그니스',text:'길 위의 정령부터 렌즈로 살펴봐. 바닥의 흔적을 다시 드러낼 방법을 찾아보자.'}],forestFloodLens)}
 let forestStateResolved=false;
 function forestFloodLens(){forestStateResolved=false;setScene({image:ASSETS.forestFlood,alt:'물에 잠긴 숲길',title:'렌즈로 길 위의 물을 관찰하자.',scene:5,html:chapterTalk('루미아','숲길을 덮은 물의 정령은 어떤 배열일까? 렌즈로 살펴봐.')});showInventory({lensClick:()=>{showLens('liquid');if(forestStateResolved||el('forestState'))return;content.insertAdjacentHTML('beforeend',`<div id="forestState">${chapterChoice('', ['고체','액체','기체'],'forestStateAnswer')}</div>`)},wandClick:()=>{if(!forestStateResolved)return;const spells=el('forestSpells');if(spells)spells.hidden=false}})}
-function forestStateAnswer(index,button){state.attempts.floodState++;record('forest_flood_state',button.textContent,index===1);if(index!==1){button.classList.add('bad');feedback('입자들이 비교적 가까이 있으면서 서로 자리를 바꿔 움직여.',true);return}lockChoices();forestStateResolved=true;el('inventoryWand').disabled=false;content.innerHTML=chapterTalk('이그니스','길을 막은 건 액체야. 얼음 숨결로 얼리면 또 길이 막힐 거야. 방금 배운 기술로 물을 걷어 내 보자.')+expandedSpellPanel('forestSpell','forestSpells');el('forestSpells').hidden=true}
-function forestSpell(key,button){state.attempts.floodSpell++;record('forest_spell',key,key==='vapor');if(key!=='vapor'){button.classList.add('bad');feedback('이그니스: 단단한 고체를 녹이는 기술이나 액체를 얼리는 기술로는 숲길의 물을 공기 중으로 보낼 수 없어.');return}lockChoices();startPhaseExperiment('forest')}
+function forestStateAnswer(index,button){state.attempts.floodState++;record('forest_flood_state',button.textContent,index===1);if(index!==1){button.classList.add('bad');feedback('입자들이 비교적 가까이 있으면서 서로 자리를 바꿔 움직여.',true);return}lockChoices();forestStateResolved=true;el('inventoryWand').disabled=false;content.innerHTML=chapterTalk('이그니스','길 위의 정령이 액체라는 걸 확인했어. 바닥의 흔적을 드러내려면 어떤 기술을 써야 할까?')+expandedSpellPanel('forestSpell','forestSpells');el('forestSpells').hidden=true}
+function forestSpell(key,button){state.attempts.floodSpell++;record('forest_spell',key,key==='vapor');if(key!=='vapor'){button.classList.add('bad');feedback('이그니스: '+(key==='frost'?'얼려서 건널 수는 있겠지만 바닥의 흔적은 얼음 아래에 남아. 길 위의 물을 걷어낼 방법을 찾아보자.':key==='fire'?'성스러운 불꽃은 고체 봉인을 녹일 때 쓰는 기술이야. 지금 길 위의 정령은 어떤 상태인지 떠올려 봐.':'길 위의 물과 바닥의 흔적을 다시 살펴보자.'),true);return}lockChoices();startPhaseExperiment('forest')}
 let phaseTimer=null,phaseValue=0,phaseTemperature=0,phasePlateau=false,phasePaused=false,phaseMidShown=false;
 function stopPhaseTimer(){if(phaseTimer){clearInterval(phaseTimer);phaseTimer=null}el('stageMagic').classList.remove('charging')}
 function startPhaseExperiment(kind){stopPhaseTimer();const forest=kind==='forest';state.step=forest?6:5;phaseValue=0;phaseTemperature=forest?20:45;phasePlateau=false;phasePaused=false;phaseMidShown=false;
@@ -878,11 +878,12 @@ function phaseTick(kind,from,to){const forest=kind==='forest';if(!phasePlateau){
 function phaseQuestion(kind){const forest=kind==='forest';state.step=forest?6:5;setScene({image:forest?ASSETS.forestCleared:ASSETS.cloudFlow,alt:forest?'물길이 사라져 드러난 숲길':'수로에 맺힌 물방울',title:'온도가 일정했는데 왜 상태는 변했을까?',scene:forest?6:5,html:chapterTalk('루미아',forest?'우리가 계속 열을 보냈는데 온도는 일정했고, 물은 길에서 사라졌어. 열은 어디에 쓰였을까?':'계속 열을 빼앗았는데 온도는 그대로였어. 그 사이 물방울은 점점 늘었어. 무슨 일일까?')+chapterChoice('',forest?['액체가 기체로 상태 변화하는 데 쓰였다.','물의 온도만 계속 높아졌다.','열에너지 전달이 멈췄다.']:['기체가 액체로 변하며 열에너지를 방출했다.','열에너지 출입이 멈췄다.','기체 입자의 수가 줄었다.'],'answerPhase')})}
 function answerPhase(index,button){const forest=state.chapter===3;state.attempts.plateau++;record(forest?'vaporization_plateau':'condensation_plateau',button.textContent,index===0);if(index!==0){button.classList.add('bad');feedback('열을 계속 주거나 빼앗는 동안, 실제로 무엇이 변했는지 떠올려 봐.',true);return}lockChoices();feedback(forest?'루미아: 맞아. 액체가 기체로 변하는 데 열이 사용됐어. 그래서 변화하는 동안 온도는 일정했구나.':'루미아: 맞아. 기체가 액체로 변하며 열에너지를 계속 방출했어. 그래서 변화하는 동안 온도는 일정했구나.');afterDialogueFinishes(forest?forestButterflyIntro:cloudDrakeIntro,400)}
 function forestButterflyIntro(){state.step=7;storySequence({image:ASSETS.forestBarrier,title:'안개 나비가 룬을 액체 장막에 가뒀다.',scene:7,cast:[]},[
+ {speaker:'피코',text:'물이 걷히니까 바닥에 새겨진 흔적이 보여! 따라왔더니 저 나비가 룬을 붙잡고 있어.'},
  {speaker:'안개 나비',text:'숲길은 되찾았겠지만 기화의 룬은 내 액체 장막 안에 있어! 빈틈도 없으니 손을 넣어 꺼낼 수 없을걸!'},
  {speaker:'피코',text:'정말 물로 된 막이 룬을 완전히 둘러싸고 있어. 손을 대도 안쪽에 닿지 않겠어.'},
  {speaker:'아쿠아',text:'나비를 공격할 필요는 없어. 룬을 가둔 막의 상태를 렌즈로 확인하자.'}],forestButterflyLens)}
 function forestButterflyLens(){state.butterflyStateResolved=false;setScene({image:ASSETS.forestBarrier,alt:'손을 넣을 틈 없이 룬을 감싼 액체 장막',title:'렌즈로 룬을 감싼 액체 장막을 살펴보자.',scene:7,html:chapterTalk('루미아','손이 들어갈 틈도 없는 저 장막은 어떤 상태일까? 렌즈로 보자.')});showInventory({lensClick:()=>{showLens('liquid');if(state.butterflyStateResolved||el('butterflyStates'))return;content.insertAdjacentHTML('beforeend',`<div id="butterflyStates">${chapterChoice('', ['고체','액체','기체'],'butterflyStateAnswer')}</div>`)},wandClick:()=>{if(!state.butterflyStateResolved)return;const spells=el('butterflySpells');if(spells)spells.hidden=false}})}
-function butterflyStateAnswer(index,button){state.attempts.bossState++;record('butterfly_barrier_state',button.textContent,index===1);if(index!==1){button.classList.add('bad');feedback('장막의 입자들이 서로 가까이에서 자리를 바꾸며 움직여.',true);return}lockChoices();state.butterflyStateResolved=true;el('inventoryWand').disabled=false;content.innerHTML=chapterTalk('이그니스','장막은 액체야. 얼음 숨결로 굳혀도 손이 닿지 않아. 새로 배운 기술로 이 액체 막을 거둘 수 있을까?')+expandedSpellPanel('butterflySpell','butterflySpells');el('butterflySpells').hidden=true}
+function butterflyStateAnswer(index,button){state.attempts.bossState++;record('butterfly_barrier_state',button.textContent,index===1);if(index!==1){button.classList.add('bad');feedback('장막의 입자들이 서로 가까이에서 자리를 바꾸며 움직여.',true);return}lockChoices();state.butterflyStateResolved=true;el('inventoryWand').disabled=false;content.innerHTML=chapterTalk('이그니스','장막이 액체라는 건 확인했어. 손을 넣을 틈이 없으니 막을 어떻게 바꿀지 네가 골라 봐.')+expandedSpellPanel('butterflySpell','butterflySpells');el('butterflySpells').hidden=true}
 function butterflySpell(key,button){state.attempts.bossSpell++;record('butterfly_spell',key,key==='vapor');if(key!=='vapor'){button.classList.add('bad');const hints={fire:'성스러운 불꽃은 고체 봉인을 녹일 때 쓰는 기술이야. 이미 액체인 장막에는 맞지 않아. 액체를 기체로 바꿀 기술을 골라 봐.',frost:'얼음 숨결로 장막을 굳히면 룬은 계속 갇혀 있어. 액체를 기체로 바꿀 기술을 골라 봐.',condense:'구름 포획은 기체를 액체 방울로 모을 때 쓰는 기술이야. 지금 장막은 이미 액체야.'};feedback('이그니스: '+(hints[key]||'장막은 액체야. 액체를 기체로 바꿀 기술을 골라 봐.'),true);return}lockChoices();storySequence({image:ASSETS.forestBarrierFree,title:'장막이 기체로 변해 기화의 룬이 드러났다.',scene:7},[
  {speaker:'안개 나비',text:'내 액체 장막이 기체로 흩어졌어! 룬을 더는 가둘 수 없겠네. 가져가.'},
  {speaker:'이그니스',text:'같은 입자들이 더 멀리 떨어져 자유롭게 움직이게 됐어. 열에너지를 흡수하며 액체가 기체로 변한 거야.'},
@@ -897,7 +898,7 @@ function cloudObservation(){state.step=2;setScene({image:ASSETS.cloudDry,alt:'�
 function cloudStateAnswer(index,button){state.attempts.gasObservation++;record('water_vapor_state',button.textContent,index===2);if(index!==2){button.classList.add('bad');feedback('정령들이 서로 멀리 떨어져 자유롭게 움직여.',true);return}lockChoices();storySequence({image:ASSETS.cloudDry,title:'기체 상태의 물을 다시 모으자.',scene:3},[
  {speaker:'아쿠아',text:'보이지 않는 수증기가 기체 상태로 공기 중에 퍼져 있었어. 저 하얀 구름처럼 보이는 작은 액체 방울과는 구별해야 해.'},
  {speaker:'아쿠아',text:'수로는 비어 있는데 공기는 습하네. 열을 빼앗으면서 눈에 보이지 않던 수증기가 어떻게 변하는지 살펴보자.'},
- {speaker:'크리오',text:'얼음 숨결은 액체를 얼리는 기술이야. 이번에는 기체에서 열을 빼앗아 액체 방울로 모으는 구름 포획을 알려 줄게.'},
+ {speaker:'크리오',text:'공기 중에 퍼진 물을 수로로 되돌릴 새로운 기술을 알려 줄게. 기술 설명을 읽고 알맞은 것을 골라 봐.'},
  {speaker:'루미아',text:'탑의 수증기를 실제 수로의 물로 되돌리자. 먼저 알맞은 기술을 골라 보자.'}],cloudSpellChoice)}
 function cloudSpellChoice(){state.step=3;setScene({image:ASSETS.cloudDry,alt:'수증기가 퍼진 구름의 탑',title:'기체를 액체로 모을 기술을 선택하자.',scene:3,html:chapterTalk('크리오','기체가 넓게 흩어져 있어. 렌즈로 정령을 다시 확인한 다음 지팡이를 골라 봐.')});showInventory({lensClick:()=>{showLens('gas');el('inventoryWand').disabled=false},wandClick:()=>{if(!el('cloudSpells'))content.insertAdjacentHTML('beforeend',expandedSpellPanel('cloudSpell','cloudSpells'))}})}
 function cloudSpell(key,button){state.attempts.condenseChoice++;record('cloud_spell',key,key==='condense');if(key!=='condense'){button.classList.add('bad');feedback('크리오: 수로에는 기체 상태의 물이 퍼져 있어. 이를 액체로 모으는 기술을 찾아 봐.',true);return}lockChoices();startPhaseExperiment('cloud')}
@@ -1004,8 +1005,8 @@ function potionSurface(){setScene({image:ASSETS.potionSource,title:'물약 표�
 function beginEvaporationView(){const sys=particleSystem;setTimeout(()=>{if(particleSystem===sys&&lens.classList.contains('show')){sys.pts.slice(0,2).forEach(p=>{p.mode='gas';p.n.className='particle gas';p.vx=.10;p.vy=-.17})}},1200)}
 function answerEvaporation(index,button){state.attempts.evaporation++;record('evaporation_observation',button.textContent,index===0);if(index!==0){button.classList.add('bad');feedback('액체 표면을 떠난 정령은 없어지지 않고 공기 중에서도 움직이고 있어.',true);return}lockChoices();storySequence({image:ASSETS.potionSource,title:'향기의 근원을 잠재울 방법을 찾아라.',scene:3},[
  {speaker:'아쿠아',text:'액체 표면에서 일부 입자가 기체가 되는 것이 증발이야. 그다음 공기 중에서 퍼지는 현상이 확산이지.'},
- {speaker:'루미아',text:'향기가 계속 나오면 뒤따라오는 사람들도 길을 잃겠어. 배운 마법으로 물약을 얼려 움직임을 줄이고, 병의 입구까지 봉인하자.'}],potionChoose)}
-function potionChoose(){setScene({image:ASSETS.potionSource,title:'물약을 얼릴 기술을 고르자.',scene:3,html:chapterTalk('크리오','렌즈로 액체를 다시 살펴본 뒤 지팡이를 골라 봐. 물약을 단단하게 만들려면 어느 기술이 필요할까?')});showInventory({lensClick:()=>{showLens('liquid');el('inventoryWand').disabled=false},wandClick:()=>{if(!el('potionSpells'))content.insertAdjacentHTML('beforeend',expandedSpellPanel('potionSpell','potionSpells'))}})}
+ {speaker:'루미아',text:'향기가 계속 나오면 뒤따라오는 사람들도 길을 잃겠어. 물약의 움직임을 줄이고 병의 입구까지 봉인하자.'}],potionChoose)}
+function potionChoose(){setScene({image:ASSETS.potionSource,title:'물약의 향기를 막을 기술을 고르자.',scene:3,html:chapterTalk('크리오','렌즈로 물약의 상태를 다시 살펴본 뒤 지팡이를 골라 봐. 새 향기가 퍼지지 않게 할 기술은 무엇일까?')});showInventory({lensClick:()=>{showLens('liquid');el('inventoryWand').disabled=false},wandClick:()=>{if(!el('potionSpells'))content.insertAdjacentHTML('beforeend',expandedSpellPanel('potionSpell','potionSpells'))}})}
 function potionSpell(key,button){state.attempts.potionSpell=(state.attempts.potionSpell||0)+1;record('potion_freezing_spell',key,key==='frost');if(key!=='frost'){button.classList.add('bad');feedback('크리오: 따뜻한 힘은 향기를 더 빠르게 퍼뜨릴 수 있어. 이번에는 물약에서 열을 빼앗아 보자.',true);return}lockChoices();startPotionFreeze()}
 let potionTimer=null,potionPercent=0;
 function startPotionFreeze(){potionPercent=0;setScene({image:ASSETS.potionSource,title:'지팡이를 길게 눌러 물약을 얼리자.',scene:3,html:chapterTalk('크리오','열을 빼앗으면 정령의 움직임이 줄어들 거야. 지팡이를 계속 눌러 물약이 단단해지는 모습을 지켜봐.')});showInventory({lensClick:()=>{if(potionTimer){clearInterval(potionTimer);potionTimer=null}showLens('liquid');el('inventoryWand').disabled=false;el('observationHud').className='observation-hud show';el('observationHud').innerHTML='<div class="progress-wrap show"><div class="hint">물약 응고 <b id="potionPercent">0%</b></div><div class="progress"><i id="potionFill"></i></div></div>'},wandClick:()=>{showCastingWand('cool');const w=el('castingWand');if(w.dataset.bound==='potion')return;w.dataset.bound='potion';const stop=()=>{clearInterval(potionTimer);potionTimer=null;el('stageMagic').classList.remove('charging')};const begin=e=>{e.preventDefault();if(potionTimer||potionPercent>=100||w.disabled)return;if(e.pointerId!==undefined)(function(){try{w.setPointerCapture(e.pointerId)}catch(error){}})();el('stageMagic').classList.add('charging');potionTimer=setInterval(()=>{potionPercent=Math.min(100,potionPercent+2);drawMagic(potionPercent);updateFreezingParticles(potionPercent);el('potionPercent').textContent=potionPercent+'%';el('potionFill').style.width=potionPercent+'%';if(potionPercent===100){stop();w.disabled=true;record('potion_frozen',100,true);img.src=ASSETS.potionSealed;content.querySelector('.dialogue').textContent='“물약이 단단해졌어. 이제 병 입구를 봉인해 새 향기가 나오지 않게 하자.”';afterDialogueFinishes(potionSealed,450)}},100)};w.addEventListener('pointerdown',begin);['pointerup','pointercancel','lostpointercapture'].forEach(t=>w.addEventListener(t,stop));w.addEventListener('keydown',e=>{if((e.key===' '||e.key==='Enter')&&!e.repeat)begin(e)});w.addEventListener('keyup',stop)}})}
@@ -1052,7 +1053,7 @@ function crystalReturn(){state.step=6;storySequence({image:ASSETS.crystalMine,ti
  {speaker:'루미아',text:'광산을 지키려면 수정 입자를 끌어모으는 골렘을 완전히 흩어야겠어. 룬은 해치지 말고.'}],crystalGolemIntro)}
 function crystalGolemIntro(){state.step=7;storySequence({image:ASSETS.crystalGolem,title:'광산의 수정을 빼앗는 골렘을 멈추자.',scene:7},[
  {speaker:'수정 골렘',text:'사라진 광산의 수정이 내 몸이 되었다! 내가 있는 한 광산의 수정은 계속 줄어들 거야.'},
- {speaker:'테라',text:'골렘의 몸 전체를 고체에서 기체로 승화시켜야 광산을 지킬 수 있어. 먼저 몸의 상태를 렌즈로 확인하자.'}],()=>journeyLens(ASSETS.crystalGolem,'수정 골렘 몸 전체의 상태를 관찰하자.',7,'루미아','골렘의 몸을 이루는 정령의 상태를 골라 봐.','solid','golemState',()=>journeySpell(ASSETS.crystalGolem,'골렘의 몸 전체를 승화시켜 광산을 지키자.',7,'테라','단단한 몸 전체를 액체 없이 기체로 바꿀 마법을 골라 봐.','sublime','golemSpell',crystalRune)))}
+ {speaker:'테라',text:'골렘의 몸을 흩어야 더는 광산의 수정을 빼앗지 못할 거야. 먼저 몸의 상태를 렌즈로 확인하자.'}],()=>journeyLens(ASSETS.crystalGolem,'수정 골렘 몸 전체의 상태를 관찰하자.',7,'루미아','골렘의 몸을 이루는 정령의 상태를 골라 봐.','solid','golemState',()=>journeySpell(ASSETS.crystalGolem,'골렘을 멈추고 광산을 지키자.',7,'테라','단단한 몸 전체를 흩어 내되 룬은 해치지 않을 기술을 골라 봐.','sublime','golemSpell',crystalRune)))}
 function crystalRune(){state.step=6;storySequence({image:ASSETS.crystalRestored,title:'수정 골렘이 완전히 흩어지고 광산이 안정되었다.',scene:6},[
  {speaker:'루미아',text:'골렘의 몸이 보랏빛 기체로 흩어졌어. 이제 더는 광맥의 수정을 빼앗지 못할 거야!'},
  {speaker:'광부',text:'광산의 수정이 전부 사라진 줄 알았는데… 흩어진 정령들이 다시 광맥으로 돌아오고 있어요!'},
@@ -1071,7 +1072,7 @@ function starParticles(){state.step=7;questScene(ASSETS.crystalChasm,'기체와 
 function starSolidParticles(){showLens('solid');content.innerHTML=chapterTalk('루미아','같은 수정 입자들이 가까이 모여 비교적 규칙적인 배열을 이루고 일정한 자리에서 진동해.')+'<button class="next" type="button" onclick="starBridge()">끊긴 길로 가기</button>'}
 function starBridge(){state.step=8;storySequence({image:ASSETS.crystalChasm,title:'공기 중 수정 입자로 별서리 길을 만들자.',scene:8},[
  {speaker:'피코',text:'길 끝이 허공이야. 하지만 골렘에게서 흩어진 수정 정령이 이곳에 가득해!'},
- {speaker:'크리오',text:'방금 배운 별의 결속으로 기체 정령들을 하나씩 단단한 발판으로 모아 보자.'}],()=>journeySpell(ASSETS.crystalChasm,'수정 징검다리로 신전까지의 길을 잇자.',8,'루미아','퍼진 수정 정령을 액체 없이 고체로 모을 기술을 골라 봐.','deposit','starBridgeSpell',()=>storySequence({image:ASSETS.crystalBridge,title:'보랏빛 수정 징검다리가 허공에 이어졌다.',scene:8},[
+ {speaker:'크리오',text:'공중에 퍼진 수정 정령으로 단단한 발판을 만들 수 있을 거야. 방금 배운 기술들을 떠올려 봐.'}],()=>journeySpell(ASSETS.crystalChasm,'수정 징검다리로 신전까지의 길을 잇자.',8,'루미아','퍼진 수정 정령을 단단한 발판으로 모을 기술을 골라 봐.','deposit','starBridgeSpell',()=>storySequence({image:ASSETS.crystalBridge,title:'보랏빛 수정 징검다리가 허공에 이어졌다.',scene:8},[
  {speaker:'크리오',text:'흩어져 있던 같은 입자들이 가까이 모여 발판이 되었어. 액체 상태를 거치지 않고 기체에서 고체로 승화했지.'},
  {speaker:'테라',text:'첫 번째 룬은 골렘을 흩었을 때, 두 번째 룬은 발판을 만들며 빛났어. 이제 양방향 승화의 룬이 모두 모였어!'},
  {speaker:'루미아',text:'신전으로 건널 길이 생겼어. 두 방향의 승화를 마법책에 기록하고 원스타에게 가자.'}],()=>finishNewChapter(5))))}
@@ -1116,7 +1117,7 @@ const BOSS_HINTS=[
  {speaker:'이그니스',text:'물 장막이 길을 막고 있어. 물을 공기 중으로 보내면 지나갈 수 있어.'},
  {speaker:'아쿠아',text:'장막의 물은 사라진 게 아니야. 보이지 않는 수증기로 퍼졌어. 열을 빼앗아 물방울로 모으면 공격을 멈출 수 있을 거야.'},
  {speaker:'크리오',text:'봉인수가 원스타의 발밑을 흐르고 있어. 단단하게 얼리면 발을 붙잡을 수 있겠어.'},
- {speaker:'테라',text:'수정 결계를 녹여도 액체가 벽처럼 남을 거야. 고체를 기체로 흩어서 광산으로 돌려보낼 방법을 찾아보자.'},
+ {speaker:'테라',text:'결계가 루미아를 완전히 가뒀어. 수정 입자를 광산으로 되돌리면서 빠져나올 방법을 찾아보자.'},
  {speaker:'크리오',text:'봉인수가 마을로 퍼지기 전에 열을 빼앗아 고체로 다시 모으자.'}
 ];
 function bossObject(name){const code=name.charCodeAt(name.length-1);return name+((code-0xAC00)%28?'을':'를')}
@@ -1131,7 +1132,7 @@ function bossRound(index){bossIndex=index;bossMisses=0;renderBossVitals();state.
  const lines=index===0?[{speaker:'루미아',text:'힘만으로는 갑옷을 뚫을 수 없어. 먼저 정령의 배열과 움직임을 보자.'}]:index===4?[
   {speaker:'원스타',text:BOSS_TAUNTS[index]},
   {speaker:'루미아',text:'수정이 나를 둘러쌌어. 이대로는 움직일 수 없어!'},
-  {speaker:'테라',text:'수정 결계를 녹여도 액체가 벽처럼 남아. 기체 상태로 흩어서 광산으로 돌려보내자.'}
+  {speaker:'테라',text:'결계가 나갈 틈 없이 둘러쌌어. 수정 입자를 광산으로 되돌리면서 빠져나올 방법을 찾아보자.'}
  ]:index===2?[
   {speaker:'아쿠아',text:'물 장막이 기체로 퍼졌어. 보이지 않아도 입자는 남아 있어. 렌즈로 확인하자.'}
  ]:[{speaker:'원스타',text:BOSS_TAUNTS[index]},
@@ -1143,7 +1144,7 @@ function bossRound(index){bossIndex=index;bossMisses=0;renderBossVitals();state.
 function bossChooseSpell(){const r=BOSS_ROUNDS[bossIndex],hint=BOSS_HINTS[bossIndex];questScene(ASSETS[r.image],`${bossObject(r.name)} 변화시킬 기술을 선택하자.`,bossIndex+1,hint.speaker,hint.text);content.classList.add('boss-spell-layout');showInventory({lensClick:()=>showLens(r.from),wandClick:()=>{if(!el('bossSpells'))content.insertAdjacentHTML('beforeend',expandedSpellPanel('bossSpell','bossSpells'))},wandEnabled:true})}
 function bossSpell(key,button){if(bossCasting||button.disabled)return;const r=BOSS_ROUNDS[bossIndex],ok=key===r.spell;bossCasting=true;state.attempts.bossSpell++;record(`boss_round_${bossIndex+1}_spell`,key,ok);
  if(!ok){const expected=r.heat==='흡수'?'heat':'cool',used=BOSS_SPELL_DIRECTION[key],same=used===expected;bossMisses++;bossMistakes++;let penalty;
-   if(same){bossMp=Math.max(0,bossMp-22);penalty='열에너지의 방향은 맞았지만 필요한 상태 변화가 아니었어. 마력이 22 줄었어.'}
+   if(same){bossMp=Math.max(0,bossMp-22);penalty=bossIndex===4&&key==='fire'?'녹였지만 액체가 벽처럼 남았어. 마력이 22 줄었어.':'열에너지의 방향은 맞았지만 필요한 상태 변화가 아니었어. 마력이 22 줄었어.'}
    else{bossHp=Math.max(0,bossHp-28);penalty=used==='cool'?'차가운 마력이 튕겨 돌아와 동상을 입었어. HP가 28 줄었어.':'뜨거운 마력이 튕겨 돌아와 화상을 입었어. HP가 28 줄었어.'}
    if(bossMisses>=3){bossMisses=0;bossHp=Math.max(0,bossHp-25);penalty+=' 세 번째 공격도 실패하자 원스타가 반격해 HP가 25 더 줄었어.';record('boss_counterattack',bossIndex+1,false)}
    renderBossVitals();save(false);lockChoices();if(bossHp===0||bossMp===0){bossDefeat(bossHp===0?'HP가 모두 닳았어.':'MP가 모두 닳았어.');return}
