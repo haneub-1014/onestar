@@ -541,6 +541,7 @@ const SPEAKER_IMAGES={
   '이그니스':ASSETS.ignis,'아쿠아':ASSETS.aqua,'크리오':ASSETS.cryo,'테라':ASSETS.terra
 };
 const state={chapter:1,step:0,classId:'',studentNo:'',name:'',startedAt:null,attempts:{observation:0,energy:0,plateau:0,slimeState:0,slimeSpell:0},answers:[],heatSeconds:0,learnedSpells:[],completed:false};
+let bossCastTimer=null,bossFeedbackTimer=null,bossCastGeneration=0,bossCasting=false;
 const el=id=>document.getElementById(id), content=el('content'), img=el('sceneImage'), lens=el('lens');
 const speechRuns=new WeakMap();let speechRefreshPending=false;
 function refreshSpeech(){
@@ -749,7 +750,7 @@ el('loginForm').addEventListener('submit',e=>{
     }
   }).withFailureHandler(()=>{const note=el('kingdomMap').querySelector('.map-message');if(note)note.textContent='서버에 연결할 수 없어 이 기기에 저장된 진행도를 보여 줍니다.'}).getStudentProgress(state.studentNo,state.name)}
 });
-try{const account=JSON.parse(localStorage.getItem(ACCOUNT_STORAGE_KEY)||'null');if(account&&typeof account.studentNo==='string'&&typeof account.name==='string'&&classFromStudentNo(account.studentNo)&&account.name.trim()){el('studentNo').value=account.studentNo;el('studentName').value=account.name;showDetectedClass();if(openingTimer){clearInterval(openingTimer);openingTimer=null}el('opening').hidden=true;el('login').hidden=false;el('loginForm').requestSubmit()}}catch(e){}
+queueMicrotask(()=>{try{const account=JSON.parse(localStorage.getItem(ACCOUNT_STORAGE_KEY)||'null');if(account&&typeof account.studentNo==='string'&&typeof account.name==='string'&&classFromStudentNo(account.studentNo)&&account.name.trim()){el('studentNo').value=account.studentNo;el('studentName').value=account.name;showDetectedClass();if(openingTimer){clearInterval(openingTimer);openingTimer=null}el('opening').hidden=true;el('login').hidden=false;el('loginForm').requestSubmit()}}catch(error){console.error('자동 로그인에 실패했습니다.',error);el('opening').hidden=true;el('login').hidden=false;el('login').style.display='';el('kingdomMap').hidden=true;el('mapReturn').hidden=true}});
 
 
 function startLakeJourney(){setChapter('Chapter 2 · 얼어붙지 않은 호수');state.step=1;storySequence({image:ASSETS.lakeArrival,title:"두 번째 룬을 찾아 호수 너머로 향하자.",scene:1,prologue:false,cast:[]},[{"speaker": "루미아", "text": progressFlags.chapter1?"융해의 룬은 되찾았어. 다음은 호수 건너편의 응고의 룬이야. 그런데 길이 전부 물에 잠겼네.":"호수 건너편에 응고의 룬이 있어. 그런데 길이 전부 물에 잠겼네."}, {"speaker": "아쿠아", "text": "이곳은 마을 사이를 오가던 길이야. 우리뿐 아니라 뒤따라올 사람들도 건널 수 있도록 단단한 길이 필요해."}, {"speaker": "크리오", "text": "이번에는 흐르는 정령을 살펴보자. 얼음 성에서 본 대열과 어떻게 다른지 렌즈로 확인해 봐."}],lakeObservationScene)}
@@ -1060,7 +1061,6 @@ const BOSS_ROUNDS=[
  {name:'흩어지는 봉인수',image:'bossSealVapor',afterImage:'bossBound',from:'gas',to:'solid',spell:'deposit',heat:'방출',result:'흩어지던 봉인수 입자의 열에너지를 빼앗자 기체가 액체를 거치지 않고 고체로 모였다. 단단해진 봉인수가 원스타를 붙잡고 혼돈의 마력이 마을로 퍼지는 것을 막았다.',particles:'멀리 퍼지던 같은 입자들이 가까이 모여 비교적 규칙적으로 배열되고 제자리에서 진동한다.',next:'봉인수를 붙잡았어! 이제 여섯 룬으로 원스타와 혼돈의 룬을 봉인하자.'}
 ];
 let bossIndex=0,bossHp=100,bossMp=100,bossMisses=0,bossMistakes=0,bossDefeats=0;
-let bossCastTimer=null,bossFeedbackTimer=null,bossCastGeneration=0,bossCasting=false;
 function cancelBossCast(){bossCastGeneration++;if(bossCastTimer){clearInterval(bossCastTimer);bossCastTimer=null}if(bossFeedbackTimer){clearTimeout(bossFeedbackTimer);bossFeedbackTimer=null}bossCasting=false}
 const BOSS_SPELL_DIRECTION={fire:'heat',frost:'cool',vapor:'heat',condense:'cool',sublime:'heat',deposit:'cool'};
 function renderBossVitals(){const box=el('bossVitals');box.hidden=state.chapter!==7;if(box.hidden)return;el('bossHpText').textContent=bossHp+' / 100';el('bossMpText').textContent=bossMp+' / 100';el('bossHpBar').style.width=bossHp+'%';el('bossMpBar').style.width=bossMp+'%';el('bossTurnText').textContent=bossMisses?'이번 대상에서 실패 '+bossMisses+' / 3 · 세 번째 실패 시 원스타 반격':'기술을 신중하게 골라 봐.';state.bossHp=bossHp;state.bossMp=bossMp;state.bossMistakes=bossMistakes;state.bossDefeats=bossDefeats}
