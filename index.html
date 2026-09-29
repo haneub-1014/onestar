@@ -326,14 +326,8 @@ body[data-scene="7"] .content:has(>.expanded-spells:not([hidden]))>.story-bubble
 @media(max-width:850px){.content:has(>.story-bubble):has(>.expanded-spells:not([hidden]))>.expanded-spells{flex-basis:clamp(265px,48vw,390px)!important;width:clamp(265px,48vw,390px)!important;max-width:55vw!important}.content .expanded-spells .choice-desc{font-size:10px!important}}
 @media(max-height:620px) and (orientation:landscape){.content:has(>.story-bubble):has(>.expanded-spells:not([hidden]))>.expanded-spells{max-height:35dvh!important}.content .expanded-spells .spell-card,.content:has(>.story-bubble):has(>.choices:not([hidden]))>.expanded-spells .spell-card{min-height:60px!important;padding:3px 5px!important}}
 /* Narration appears as an unobtrusive caption rather than a character speaking. */
-.story-bubble.story-caption{border:0!important;border-radius:12px!important;background:linear-gradient(90deg,#09182dcc,#0e2942d9 72%,#09182dcc)!important;box-shadow:0 5px 20px #07101c88!important;backdrop-filter:blur(7px);padding:15px 78px 15px 20px!important;max-width:100%!important}
+.story-bubble.story-caption{border:1px solid #a7ddea!important;border-radius:15px!important;background:linear-gradient(120deg,#102b41,#173c50)!important;box-shadow:0 8px 24px #06152899!important;backdrop-filter:none!important;padding:15px 78px 15px 20px!important;max-width:100%!important;overflow:visible!important}
 .story-bubble.story-caption .dialogue{font-style:normal;text-shadow:0 2px 7px #02101d}
-/* Keep both inventory tools on one layout; let the dialogue fit its text. */
-.content.boss-spell-layout,.content.boss-spell-layout:has(>.choices:not([hidden])){display:grid!important;grid-template-columns:minmax(0,42%) minmax(0,1fr)!important;align-items:end!important;gap:12px!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important}
-.content.boss-spell-layout>.story-bubble,.content.boss-spell-layout:has(>.choices:not([hidden]))>.story-bubble{grid-column:1!important;grid-row:1!important;width:100%!important;max-width:none!important;min-height:0!important;max-height:min(28dvh,260px)!important;box-sizing:border-box!important;align-self:end!important;overflow:auto!important}
-.content.boss-spell-layout>#bossSpells,.content.boss-spell-layout:has(>.choices:not([hidden]))>#bossSpells{grid-column:2!important;grid-row:1!important;width:100%!important;max-width:none!important;max-height:min(28dvh,260px)!important;box-sizing:border-box!important;align-self:end!important;overflow:auto!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
-.content.boss-spell-layout>#bossSpells[hidden]{display:none!important}
-@media(max-height:700px) and (orientation:landscape){.content.boss-spell-layout>.story-bubble,.content.boss-spell-layout:has(>.choices:not([hidden]))>.story-bubble,.content.boss-spell-layout>#bossSpells,.content.boss-spell-layout:has(>.choices:not([hidden]))>#bossSpells{max-height:35dvh!important}}
 /* Preserve readable speech while keeping the line inside the screen. */
 .content .story-bubble .dialogue,.content .dialogue{font-size:clamp(15px,1.45vw,22px)!important;line-height:1.38!important;overflow-wrap:anywhere!important;word-break:keep-all!important}
 body[data-scene="7"] .content>.story-bubble{max-height:min(30dvh,230px)!important;overflow:auto!important}
@@ -501,6 +495,12 @@ body[data-chapter="7"] #content>.defeat-actions>.next{min-width:0!important;max-
 .content:has(>.spell-choices:not(.expanded-spells):not([hidden])) .spell-card .choice-desc{font-size:clamp(11px,.91vw,14px)!important;line-height:1.35!important;word-break:keep-all!important;overflow-wrap:normal!important}
 @media(max-width:950px){.content:has(>.story-bubble):has(>.spell-choices:not(.expanded-spells):not([hidden])){grid-template-columns:minmax(0,1fr)!important}.content:has(>.spell-choices:not(.expanded-spells):not([hidden]))>.story-bubble,.content:has(>.story-bubble)>.spell-choices:not(.expanded-spells):not([hidden]){grid-column:1!important}.content:has(>.spell-choices:not(.expanded-spells):not([hidden])) .spell-card{min-height:67px!important}}
 @media(max-width:520px) and (orientation:portrait){.content:has(>.story-bubble)>.spell-choices:not(.expanded-spells):not([hidden]){grid-template-columns:minmax(0,1fr)!important}}
+/* One opaque, scroll-free dialogue surface for the final boss's lens and wand. */
+body[data-chapter="7"] #content.boss-spell-layout{display:grid!important;grid-template-columns:minmax(0,42%) minmax(0,1fr)!important;align-items:end!important;gap:12px!important;min-height:0!important;max-height:none!important;padding:0!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;backdrop-filter:none!important;overflow:visible!important}
+body[data-chapter="7"] #content.boss-spell-layout>.story-bubble{grid-column:1!important;grid-row:1!important;align-self:end!important;width:100%!important;max-width:none!important;min-height:0!important;max-height:none!important;margin:0!important;padding:12px 16px!important;box-sizing:border-box!important;overflow:visible!important;border:1px solid #a7ddea!important;border-radius:15px!important;background:linear-gradient(120deg,#102b41,#173c50)!important;box-shadow:0 8px 24px #06152899!important;backdrop-filter:none!important}
+body[data-chapter="7"] #content.boss-spell-layout>#bossSpells:not([hidden]){grid-column:2!important;grid-row:1!important;align-self:end!important;width:100%!important;max-width:none!important;max-height:none!important;margin:0!important;overflow:visible!important}
+body[data-chapter="7"] #content.boss-spell-layout>#bossSpells[hidden]{display:none!important}
+@media(max-width:700px){body[data-chapter="7"] #content.boss-spell-layout{grid-template-columns:minmax(0,40%) minmax(0,1fr)!important}}
 </style>
 </head>
 <body>
@@ -589,7 +589,7 @@ function syncSpeakerPortrait(){
   portrait.innerHTML=`<img src="${SPEAKER_IMAGES[name]}" alt="" draggable="false">`;
 }
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function setScene({image,alt,title,scene,html,lensMode,cast=[],castMode='',prologue=false}){document.body.dataset.scene=scene;document.body.dataset.castMode=castMode||'';document.body.dataset.magicMode='';document.body.dataset.inventory='';document.body.dataset.wand='';const priorWand=el('castingWand'),freshWand=priorWand.cloneNode(true);freshWand.removeAttribute('data-bound');priorWand.replaceWith(freshWand);el('castingWand').classList.remove('show');el('castingWand').disabled=false;el('stageMagic').className='stage-magic';el('stageMagic').innerHTML='';el('observationHud').className='observation-hud';el('observationHud').innerHTML='';el('inventory').className='inventory';el('inventory').innerHTML='';lens.classList.remove('show');img.src=image;img.alt=alt||'';img.classList.remove('close');void img.offsetWidth;img.classList.add('scene-image');el('questTitle').textContent=title;el('sceneCount').textContent='진행도';el('topProgress').style.width=prologue?'8%':`${scene/8*100}%`;content.classList.remove('inventory-only','boss-spell-layout');content.innerHTML=html;setCast(scene===7?[]:cast,castMode);requestAnimationFrame(()=>{refreshSpeech();syncSpeakerPortrait()})}
+function setScene({image,alt,title,scene,html,lensMode,cast=[],castMode='',prologue=false}){cancelBossCast();document.body.dataset.scene=scene;document.body.dataset.castMode=castMode||'';document.body.dataset.magicMode='';document.body.dataset.inventory='';document.body.dataset.wand='';const priorWand=el('castingWand'),freshWand=priorWand.cloneNode(true);freshWand.removeAttribute('data-bound');priorWand.replaceWith(freshWand);el('castingWand').classList.remove('show');el('castingWand').disabled=false;el('stageMagic').className='stage-magic';el('stageMagic').innerHTML='';el('observationHud').className='observation-hud';el('observationHud').innerHTML='';el('inventory').className='inventory';el('inventory').innerHTML='';lens.classList.remove('show');img.src=image;img.alt=alt||'';img.classList.remove('close');void img.offsetWidth;img.classList.add('scene-image');el('questTitle').textContent=title;el('sceneCount').textContent='진행도';el('topProgress').style.width=prologue?'8%':`${scene/8*100}%`;content.classList.remove('inventory-only','boss-spell-layout');content.innerHTML=html;setCast(scene===7?[]:cast,castMode);requestAnimationFrame(()=>{refreshSpeech();syncSpeakerPortrait()})}
 function mountMagic(mode='heat'){document.body.dataset.magicMode=mode;const layer=el('stageMagic');if(layer.classList.contains('show'))return;layer.className='stage-magic show';layer.innerHTML=`<svg viewBox="0 0 300 300" aria-hidden="true"><circle class="rune-trace" pathLength="100" cx="150" cy="150" r="126"/><circle class="rune-trace" pathLength="100" cx="150" cy="150" r="112"/><path class="rune-trace rune-star" pathLength="100" d="M150 32 L219 245 L38 113 L262 113 L81 245 Z"/><circle class="rune-ticks" cx="150" cy="150" r="119" fill="none" stroke="#f3fcff" stroke-width="2" stroke-dasharray="1 14"/><text class="rune-core" x="150" y="162" text-anchor="middle" font-size="37" fill="#fff8cf">✦</text></svg>`;drawMagic(0)}
 
 function drawMagic(amount){const layer=el('stageMagic');const value=Math.max(0,Math.min(100,amount));layer.querySelectorAll('.rune-trace').forEach((part,i)=>{part.style.strokeDashoffset=String(100-Math.max(0,Math.min(100,(value-i*12)*100/(100-i*12))))});const ticks=layer.querySelector('.rune-ticks');if(ticks)ticks.style.opacity=String(value===0?0:Math.min(.5,value/200));layer.classList.toggle('complete',value>=100)}
@@ -703,7 +703,7 @@ function renderKingdomMap(){
   const bossOpen=finalBossUnlocked();const finalMarker=`<button class="map-marker final-marker ${bossOpen&&!progressFlags.finalBoss?'current':''}" style="left:92%;top:17%" type="button" ${bossOpen?'onclick="startFinalBoss()"':'disabled'} aria-label="원스타 최종전 · ${bossOpen?'도전 가능':'열린 장 완료 후 개방'}"><strong>별서리 신전 · 원스타</strong><small>${progressFlags.finalBoss?'왕국 복구 완료':bossOpen?'결계에 도전하기':'교사가 최종전을 열고 앞 장을 완료하면 개방'}</small></button>`;
   map.innerHTML=`<div class="map-inner"><div class="map-heading"><div><h1>상태 왕국의 여정</h1><p>왕국의 길을 따라 룬을 하나씩 되찾아 보자.</p></div><div class="map-account"><div class="map-person">${esc(state.studentNo)} · ${esc(state.name)}</div><button class="account-switch" type="button" onclick="switchAccount()">계정 바꾸기</button></div></div><div class="map-art"><img src="${ASSETS.worldMapNew}" alt="얼음 성, 호수, 안개의 숲, 구름의 탑, 수정 광산, 끊어진 길과 원스타의 별서리 신전이 차례로 놓인 왕국 지도">${markers}${finalMarker}</div><div class="map-footer">${[1,2,3,4,5].map(n=>`<span>Chapter ${n} ${!effectiveOpenChapters().includes(n)?'수업 잠김':progressFlags['chapter'+n]?'완료':chapterUnlocked(n)?'시작 가능':'이전 열린 장 완료 후 개방'}</span>`).join('')}</div><p class="map-message">여섯 룬을 되찾으면 원스타의 결계가 열립니다.</p></div>`;
 }
-function showKingdomMap(){el('bossVitals').hidden=true;el('runeStudy').hidden=true;el('kingdomMap').hidden=false;el('mapReturn').hidden=false;renderKingdomMap()}
+function showKingdomMap(){cancelBossCast();el('bossVitals').hidden=true;el('runeStudy').hidden=true;el('kingdomMap').hidden=false;el('mapReturn').hidden=false;renderKingdomMap()}
 function startKingdomChapter(number){
   if(!chapterUnlocked(number)){refreshClassLimit();return;}refreshClassLimit();
   if(coolingTimer){clearInterval(coolingTimer);coolingTimer=null}
@@ -1056,10 +1056,12 @@ const BOSS_ROUNDS=[
  {name:'물 장막',image:'bossWaterBarrier',afterImage:'bossVaporLiquid',from:'liquid',to:'gas',spell:'vapor',heat:'흡수',result:'물 장막이 기체로 흩어졌지만, 원스타가 흩어진 안개로 분신을 만들었다.',particles:'가까이서 자리를 바꾸던 입자들이 멀리 떨어져 자유롭게 운동한다.',next:'원스타가 방금 퍼진 안개로 분신을 만들었어. 먼저 상태를 살펴보자.'},
  {name:'안개 분신',image:'bossVaporLiquid',afterImage:'bossDrops',from:'gas',to:'liquid',spell:'condense',heat:'방출',result:'안개 분신이 액체 물방울로 모여 사라졌고, 그 물방울을 원스타 발밑으로 끌어모아 봉인수를 만들었다.',particles:'멀리 떨어져 움직이던 입자가 가까워져 서로 자리를 바꾼다.',next:'분신이었던 물방울을 봉인수로 모았어. 발밑에서 흐르는 상태를 살펴보자.'},
  {name:'봉인수',image:'bossDrops',afterImage:'bossFrozenCrystal',from:'liquid',to:'solid',spell:'frost',heat:'방출',result:'액체 봉인수가 고체로 굳어 원스타의 발을 붙잡았다.',particles:'액체 입자들이 가까운 규칙적 배열로 모여 제자리에서 진동한다.',next:'움직일 수 없게 된 원스타가 다가오지 못하도록 수정 결계를 세웠어.'},
- {name:'수정 결계',image:'bossFrozenCrystal',afterImage:'bossSealVapor',from:'solid',to:'gas',spell:'sublime',heat:'흡수',result:'앞을 막은 수정 결계가 액체를 거치지 않고 기체로 흩어졌다. 그 사이 원스타가 얼어 붙은 봉인수를 가열해 기체로 흩으려 한다.',particles:'규칙적으로 모인 입자가 멀리 떨어져 자유롭게 움직인다.',next:'봉인수가 기체로 퍼지면 원스타가 달아나. 발밑에서 흩어지는 입자를 살펴보자.'},
- {name:'흩어진 봉인수',image:'bossSealVapor',afterImage:'bossBound',from:'gas',to:'solid',spell:'deposit',heat:'방출',result:'기체로 흩어지려던 봉인수 입자가 다시 고체로 결속해 원스타의 발을 단단히 묶었다.',particles:'멀리 퍼지던 같은 입자들이 가까이 모여 비교적 규칙적으로 배열되고 제자리에서 진동한다.',next:'원스타가 움직이지 못해! 이제 여섯 룬으로 혼돈의 룬과 원스타를 봉인하자.'}
+ {name:'수정 결계',image:'bossFrozenCrystal',afterImage:'bossSealVapor',from:'solid',to:'gas',spell:'sublime',heat:'흡수',result:'앞을 막은 수정 결계가 액체를 거치지 않고 기체로 흩어졌다. 그 사이 원스타가 얼어붙은 봉인수를 가열해 기체로 흩으려 한다.',particles:'규칙적으로 모인 입자가 멀리 떨어져 자유롭게 움직인다.',next:'마력이 깃든 봉인수가 기체로 퍼지면 마을까지 위험해져. 흩어지기 전에 입자를 살펴보자.'},
+ {name:'흩어지는 봉인수',image:'bossSealVapor',afterImage:'bossBound',from:'gas',to:'solid',spell:'deposit',heat:'방출',result:'흩어지던 봉인수 입자의 열에너지를 빼앗자 기체가 액체를 거치지 않고 고체로 모였다. 단단해진 봉인수가 원스타를 붙잡고 혼돈의 마력이 마을로 퍼지는 것을 막았다.',particles:'멀리 퍼지던 같은 입자들이 가까이 모여 비교적 규칙적으로 배열되고 제자리에서 진동한다.',next:'봉인수를 붙잡았어! 이제 여섯 룬으로 원스타와 혼돈의 룬을 봉인하자.'}
 ];
 let bossIndex=0,bossHp=100,bossMp=100,bossMisses=0,bossMistakes=0,bossDefeats=0;
+let bossCastTimer=null,bossFeedbackTimer=null,bossCastGeneration=0,bossCasting=false;
+function cancelBossCast(){bossCastGeneration++;if(bossCastTimer){clearInterval(bossCastTimer);bossCastTimer=null}if(bossFeedbackTimer){clearTimeout(bossFeedbackTimer);bossFeedbackTimer=null}bossCasting=false}
 const BOSS_SPELL_DIRECTION={fire:'heat',frost:'cool',vapor:'heat',condense:'cool',sublime:'heat',deposit:'cool'};
 function renderBossVitals(){const box=el('bossVitals');box.hidden=state.chapter!==7;if(box.hidden)return;el('bossHpText').textContent=bossHp+' / 100';el('bossMpText').textContent=bossMp+' / 100';el('bossHpBar').style.width=bossHp+'%';el('bossMpBar').style.width=bossMp+'%';el('bossTurnText').textContent=bossMisses?'이번 대상에서 실패 '+bossMisses+' / 3 · 세 번째 실패 시 원스타 반격':'기술을 신중하게 골라 봐.';state.bossHp=bossHp;state.bossMp=bossMp;state.bossMistakes=bossMistakes;state.bossDefeats=bossDefeats}
 function bossDefeat(reason){bossDefeats++;state.attempts.retries++;state.bossDefeats=bossDefeats;renderBossVitals();record('boss_defeat',reason,false);save(false);storySequence({image:ASSETS.crystalChasm,title:'원스타의 마법에 밀려 신전 밖으로 쫓겨났다.',scene:7},[
@@ -1080,7 +1082,7 @@ const BOSS_TAUNTS=[
  '너희가 날린 물은 안개가 되었어. 이번엔 그 안개로 나를 여럿 만들지!',
  '안개 분신을 물방울로 모아 내 발밑에 보냈군. 흐르는 물만으로는 나를 묶지 못해!',
  '발이 묶여도 가까이 오지는 못할 거야. 수정 결계가 너희 앞을 막는다!',
- '수정 결계가 사라졌다면, 이 얼어 붙은 봉인수를 기체로 흩어 버리겠다!',
+ '수정 결계가 사라졌군. 이 봉인수까지 기체로 흩으면, 내 마력이 바람을 타고 마을까지 번질 거야!',
 ];
 const BOSS_HINTS=[
  {speaker:'이그니스',text:'얼음 갑옷은 고체야. 단단한 모습이 흐르게 바뀌면 갑옷을 걷어 낼 수 있겠어.'},
@@ -1088,7 +1090,7 @@ const BOSS_HINTS=[
  {speaker:'아쿠아',text:'안개 분신을 물방울로 모아 봐. 모인 물은 원스타 발밑으로 보내 봉인수로 쓸 수 있어.'},
  {speaker:'크리오',text:'봉인수는 발밑을 흐르는 액체야. 단단하게 굳히면 원스타의 발을 묶어 둘 수 있어.'},
  {speaker:'테라',text:'수정 결계는 고체야. 물처럼 녹여 흘리기보다 흔적 없이 기체로 흩는 변화를 떠올려 봐.'},
- {speaker:'크리오',text:'원스타가 얼어 붙은 봉인수를 기체로 흩으려 해! 그 입자들을 곧바로 고체로 되돌려 단단히 결속하자.'}
+ {speaker:'크리오',text:'기체로 퍼진 봉인수의 열을 빼앗아 액체를 거치지 않고 고체로 다시 모으자. 마을에 닿기 전에 붙잡아야 해!'}
 ];
 function bossObject(name){const code=name.charCodeAt(name.length-1);return name+((code-0xAC00)%28?'을':'를')}
 function bossSubject(name){const code=name.charCodeAt(name.length-1);return name+((code-0xAC00)%28?'이':'가')}
@@ -1097,7 +1099,7 @@ function bossRound(index){bossIndex=index;bossMisses=0;renderBossVitals();state.
  {speaker:'원스타',text:BOSS_TAUNTS[index]},
  {speaker:'루미아',text:index===1?'이런, 얼음 갑옷만 녹이면 될 줄 알았는데 그 물로 장막을 세우다니! 입자 렌즈로 장막의 상태를 확인하고 새로운 전술을 세우자.':`${bossObject(r.name)} 이루는 정령의 상태를 렌즈로 확인하고 다음 전술을 세우자.`}],()=>journeyLens(ASSETS[r.image],`${r.name}의 현재 상태를 판별하자.`,index+1,'루미아','렌즈에서 본 입자의 배열과 움직임을 보고 상태를 고르자.',r.from,'bossState',()=>bossChooseSpell()))}
 function bossChooseSpell(){const r=BOSS_ROUNDS[bossIndex],hint=BOSS_HINTS[bossIndex];questScene(ASSETS[r.image],`${bossObject(r.name)} 변화시킬 기술을 선택하자.`,bossIndex+1,hint.speaker,hint.text);content.classList.add('boss-spell-layout');showInventory({lensClick:()=>showLens(r.from),wandClick:()=>{if(!el('bossSpells'))content.insertAdjacentHTML('beforeend',expandedSpellPanel('bossSpell','bossSpells'))},wandEnabled:true})}
-function bossSpell(key,button){const r=BOSS_ROUNDS[bossIndex],ok=key===r.spell;state.attempts.bossSpell++;record(`boss_round_${bossIndex+1}_spell`,key,ok);
+function bossSpell(key,button){if(bossCasting||button.disabled)return;const r=BOSS_ROUNDS[bossIndex],ok=key===r.spell;bossCasting=true;state.attempts.bossSpell++;record(`boss_round_${bossIndex+1}_spell`,key,ok);
  if(!ok){const expected=r.heat==='흡수'?'heat':'cool',used=BOSS_SPELL_DIRECTION[key],same=used===expected;bossMisses++;bossMistakes++;let penalty;
    if(same){bossMp=Math.max(0,bossMp-22);penalty='열에너지의 방향은 맞았지만 필요한 상태 변화가 아니었어. 마력이 22 줄었어.'}
    else{bossHp=Math.max(0,bossHp-28);penalty=used==='cool'?'차가운 마력이 튕겨 돌아와 동상을 입었어. HP가 28 줄었어.':'뜨거운 마력이 튕겨 돌아와 화상을 입었어. HP가 28 줄었어.'}
@@ -1107,7 +1109,7 @@ function bossSpell(key,button){const r=BOSS_ROUNDS[bossIndex],ok=key===r.spell;s
     {speaker:'원스타',text:same?'열의 방향을 맞혔어도 그 기술로는 내 방어를 벗길 수 없지!':'열에너지의 방향을 거꾸로 골랐군. 그 마법은 네게 돌아간다!'},
     {speaker:'루미아',text:penalty}],bossChooseSpell);return}
  bossMisses=0;bossMp=Math.max(0,bossMp-10);renderBossVitals();record('boss_successful_cast_mp',bossMp,true);save(false);
- lockChoices();el('inventoryWand').disabled=true;showLens(r.from);mountMagic(r.heat==='흡수'?'heat':'cool');el('stageMagic').classList.add('show','charging');drawMagic(0);let percent=0;const timer=setInterval(()=>{percent=Math.min(100,percent+8);drawMagic(percent);changeParticlePhase(r.from,r.to,percent);if(percent>=100){clearInterval(timer);el('stageMagic').classList.remove('charging');img.src=ASSETS[r.afterImage];img.alt=r.result;setTimeout(bossFeedback,350)}},55)}
+ lockChoices();el('inventoryWand').disabled=true;el('inventoryLens').disabled=true;showLens(r.from);mountMagic(r.heat==='흡수'?'heat':'cool');el('stageMagic').classList.add('show','charging');drawMagic(0);let percent=0;const generation=bossCastGeneration;bossCastTimer=setInterval(()=>{if(generation!==bossCastGeneration){return}percent=Math.min(100,percent+8);drawMagic(percent);changeParticlePhase(r.from,r.to,percent);if(percent>=100){clearInterval(bossCastTimer);bossCastTimer=null;el('stageMagic').classList.remove('charging');img.src=ASSETS[r.afterImage];img.alt=r.result;bossFeedbackTimer=setTimeout(()=>{bossFeedbackTimer=null;if(generation===bossCastGeneration)bossFeedback()},350)}},55)}
 function bossFeedback(){const r=BOSS_ROUNDS[bossIndex],isLast=bossIndex===5;
  const usedSpell={fire:'성스러운 불꽃으로',vapor:'안개 폭발로',condense:'구름 포획으로',frost:'얼음 숨결로',sublime:'자수정 연무로',deposit:'별의 결속으로'}[r.spell];
  const stateName={solid:'고체',liquid:'액체',gas:'기체'};
@@ -1117,10 +1119,11 @@ function bossFeedback(){const r=BOSS_ROUNDS[bossIndex],isLast=bossIndex===5;
  {caption:true,text:r.result},
  {caption:true,text:r.particles},
  {speaker:'루미아',text:lesson}],()=>isLast?bossSealChaos():bossRound(bossIndex+1))}
-function bossSealChaos(){storySequence({image:ASSETS.bossBound,title:'여섯 룬으로 원스타와 혼돈의 룬을 봉인하자.',scene:7},[
- {speaker:'원스타',text:'봉인수를 다시 굳혀 내 발을 묶다니… 내 혼돈의 룬만은 빼앗기지 않겠다!'},
- {speaker:'루미아',text:'여섯 룬의 빛을 한곳에 모으자. 혼돈의 룬과 원스타를 함께 봉인해 왕국을 지킬 거야!'},
- {speaker:'테라',text:'봉인이 완성됐어. 원스타가 더는 왕국의 상태 변화를 뒤흔들 수 없어.'}],()=>storySequence({image:ASSETS.bossCelebration,title:'혼돈의 룬과 원스타가 봉인되고 왕국에 평화가 돌아왔다.',scene:8},[
+function bossSealChaos(){storySequence({image:ASSETS.bossBound,title:'고체 봉인수로 원스타를 붙잡았다. 여섯 룬을 모으자.',scene:7},[
+ {speaker:'원스타',text:'흩어지던 봉인수를 다시 굳혀 버리다니… 그래도 혼돈의 룬은 내 손에 있다!'},
+ {speaker:'아쿠아',text:'봉인수의 입자를 모아 마을로 퍼지는 건 막았어. 하지만 혼돈의 마력을 멈추려면 룬의 힘이 필요해.'},
+ {speaker:'루미아',text:'얼음 성부터 수정 광산까지 되찾은 여섯 룬이 있어. 빛을 한곳에 모아 원스타와 혼돈의 룬을 함께 봉인하자!'},
+ {speaker:'테라',text:'여섯 룬의 봉인이 완성됐어. 이제 혼돈의 마력은 봉인수 밖으로 퍼지지 못해.'}],()=>storySequence({image:ASSETS.bossCelebration,title:'혼돈의 룬과 원스타가 봉인되고 왕국에 평화가 돌아왔다.',scene:8},[
  {speaker:'이그니스',text:'얼음문에서 시작한 여정이 여기까지 왔어. 우리가 함께 해냈다!'},
  {speaker:'아쿠아',text:'호수와 숲, 탑과 광산에 다시 평온한 흐름이 돌아왔어.'},
  {speaker:'크리오',text:'정령들의 배열과 움직임을 끝까지 살펴본 덕분이야.'},
@@ -1137,7 +1140,7 @@ function bossVictory(){
   return `<section class="boss-recap-card"><img src="${ASSETS[round.afterImage]}" alt="${esc(round.name)}의 변화 이후"><div class="boss-recap-copy"><span class="boss-recap-kicker">${index+1}단계 · ${esc(round.name)}</span><h3>${name} <small>${direction}</small></h3><p>${esc(round.result)}</p><p class="boss-recap-particles">입자: ${esc(round.particles)}</p><div class="boss-recap-foot"><span>${spell}</span><strong>열에너지 ${round.heat}</strong></div></div></section>`
  }).join('');
  const o=el('runeStudy');o.hidden=false;
- o.innerHTML=`<div class="rune-study-inner boss-recap"><header class="rune-study-head"><span class="study-kicker">상태 왕국 · 최종전 완료</span><h2 id="runeStudyTitle">원스타와의 결투로 다시 배우는 여섯 변화</h2><p>원스타의 장벽이 어떤 상태에서 어떤 상태로 변했는지, 사용한 마법과 열에너지 출입을 차례로 확인해 보자.</p></header><div class="rune-study-body"><section class="study-story"><img class="chapter-study-image" src="${ASSETS.bossCelebration}" alt="루미아와 조력자들이 왕국의 평화를 함께 기뻐한다"><div><h3>여섯 룬으로 왕국을 되찾다</h3><p>물 장막과 안개 분신을 지나 봉인수를 굳히고 수정 결계를 흩었다. 마지막에는 흩어지는 봉인수를 다시 고체로 결속해 원스타와 혼돈의 룬을 봉인했다.</p></div></section><h3 class="boss-recap-heading">결투의 여섯 단계</h3><div class="boss-recap-rounds">${rounds}</div><section class="boss-recap-summary"><h3>열에너지로 한 번 더 정리하기</h3><div class="boss-recap-heat"><p><b>열에너지 흡수</b><br>융해 · 기화 · 고체 → 기체 승화</p><p><b>열에너지 방출</b><br>응고 · 액화 · 기체 → 고체 승화</p></div><p>여섯 변화 모두에서 같은 물질의 입자는 종류·크기·수가 변하지 않는다. 물질이 밖으로 나가지 않도록 전체를 보면 상태 변화 전후의 질량도 같다. 광산의 수정 정령처럼 다른 곳으로 이동하거나 기체로 퍼진 입자까지 함께 살펴야 한다. 고체에서는 가깝고 비교적 규칙적으로 배열되어 제자리에서 진동하고, 액체에서는 가까이에서 서로 자리를 바꾸며, 기체에서는 멀리 떨어져 자유롭게 움직인다. 상태 변화가 진행되는 동안에는 열에너지가 드나들어도 온도가 일정할 수 있다.</p></section><div class="study-visuals boss-recap-models">${studyModel('solid')}${studyModel('gas')}</div><p>학습 기록은 교사의 기록표에 저장된다.</p></div><button class="next study-close" type="button" onclick="closeNewStudy()">왕국 지도 보기</button></div>`;
+ o.innerHTML=`<div class="rune-study-inner boss-recap"><header class="rune-study-head"><span class="study-kicker">상태 왕국 · 최종전 완료</span><h2 id="runeStudyTitle">원스타와의 결투로 다시 배우는 여섯 변화</h2><p>원스타의 장벽이 어떤 상태에서 어떤 상태로 변했는지, 사용한 마법과 열에너지 출입을 차례로 확인해 보자.</p></header><div class="rune-study-body"><section class="study-story"><img class="chapter-study-image" src="${ASSETS.bossCelebration}" alt="루미아와 조력자들이 왕국의 평화를 함께 기뻐한다"><div><h3>여섯 룬으로 왕국을 되찾다</h3><p>물 장막과 안개 분신을 지나 봉인수를 굳히고 수정 결계를 흩었다. 마지막에는 마을로 번질 뻔한 봉인수의 기체 입자를 고체로 모아 확산을 막았다. 단단해진 봉인수로 원스타를 붙잡고 여섯 룬으로 원스타와 혼돈의 룬을 함께 봉인했다.</p></div></section><h3 class="boss-recap-heading">결투의 여섯 단계</h3><div class="boss-recap-rounds">${rounds}</div><section class="boss-recap-summary"><h3>열에너지로 한 번 더 정리하기</h3><div class="boss-recap-heat"><p><b>열에너지 흡수</b><br>융해 · 기화 · 고체 → 기체 승화</p><p><b>열에너지 방출</b><br>응고 · 액화 · 기체 → 고체 승화</p></div><p>여섯 변화 모두에서 같은 물질의 입자는 종류·크기·수가 변하지 않는다. 물질이 밖으로 나가지 않도록 전체를 보면 상태 변화 전후의 질량도 같다. 광산의 수정 정령처럼 다른 곳으로 이동하거나 기체로 퍼진 입자까지 함께 살펴야 한다. 고체에서는 가깝고 비교적 규칙적으로 배열되어 제자리에서 진동하고, 액체에서는 가까이에서 서로 자리를 바꾸며, 기체에서는 멀리 떨어져 자유롭게 움직인다. 상태 변화가 진행되는 동안에는 열에너지가 드나들어도 온도가 일정할 수 있다.</p></section><div class="study-visuals boss-recap-models">${studyModel('solid')}${studyModel('gas')}</div><p>학습 기록은 교사의 기록표에 저장된다.</p></div><button class="next study-close" type="button" onclick="closeNewStudy()">왕국 지도 보기</button></div>`;
  o.scrollTop=0;
 }
 /* Keep the violet crystal/star species consistent as its state changes. */
