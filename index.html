@@ -501,6 +501,18 @@ body[data-chapter="7"] #content.boss-spell-layout>.story-bubble{grid-column:1!im
 body[data-chapter="7"] #content.boss-spell-layout>#bossSpells:not([hidden]){grid-column:2!important;grid-row:1!important;align-self:end!important;width:100%!important;max-width:none!important;max-height:none!important;margin:0!important;overflow:visible!important}
 body[data-chapter="7"] #content.boss-spell-layout>#bossSpells[hidden]{display:none!important}
 @media(max-width:700px){body[data-chapter="7"] #content.boss-spell-layout{grid-template-columns:minmax(0,40%) minmax(0,1fr)!important}}
+
+/* Keep the dialogue arrow inside its balloon, at the vertical center of the right edge. */
+#content>.story-bubble:has(>.story-next){position:relative!important;min-height:clamp(70px,9dvh,100px)!important;padding-right:clamp(72px,7vw,94px)!important;overflow:visible!important}
+#content>.story-bubble>.story-next{position:absolute!important;top:50%!important;right:clamp(12px,1.4vw,22px)!important;bottom:auto!important;left:auto!important;transform:translateY(-50%)!important;margin:0!important;z-index:2!important;flex:none!important}
+/* The map control participates in the same header row as the progress label. */
+.app>header{padding-right:clamp(12px,1vw,18px)!important;min-width:0}
+.app>header .chapter{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.app>header .scene-count{flex:0 0 auto}
+.app>header .bar{flex:0 1 160px;min-width:46px}
+.app>header #mapReturn{position:static!important;top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;transform:none!important;flex:0 0 auto;align-self:center;margin:0!important;display:flex;align-items:center;justify-content:center;height:min(40px,calc(100% - 8px));box-shadow:0 0 12px #ffe5a465}
+@media(max-height:700px) and (orientation:landscape){.app>header #mapReturn{height:min(34px,calc(100% - 8px))}}
+@media(max-width:620px){.app>header{gap:6px!important}.app>header .brand{font-size:13px}.app>header .scene-count{font-size:12px}}
 </style>
 </head>
 <body>
@@ -520,7 +532,7 @@ body[data-chapter="7"] #content.boss-spell-layout>#bossSpells[hidden]{display:no
   </form>
 </div>
 <div class="app">
-  <header><div class="brand">상태 왕국의 마법사</div><div class="chapter">Chapter 1 · 얼음 성의 봉인</div><div class="scene-count" id="sceneCount">진행도</div><div class="bar"><i id="topProgress"></i></div></header>
+  <header><div class="brand">상태 왕국의 마법사</div><div class="chapter">Chapter 1 · 얼음 성의 봉인</div><div class="scene-count" id="sceneCount">진행도</div><div class="bar"><i id="topProgress"></i></div><button id="mapReturn" type="button" onclick="returnToKingdomMap()" aria-label="왕국 지도로 돌아가기" hidden>왕국 지도</button></header>
   <main>
     <section class="stage" aria-label="이야기 일러스트"><div class="boss-vitals" id="bossVitals" hidden aria-live="polite"><div class="boss-vital"><b>HP <span id="bossHpText">100 / 100</span></b><div class="boss-bar"><i id="bossHpBar"></i></div></div><div class="boss-vital"><b>MP <span id="bossMpText">100 / 100</span></b><div class="boss-bar"><i id="bossMpBar"></i></div></div><small id="bossTurnText">기술을 신중하게 골라 봐.</small></div>
       <img class="scene-image" id="sceneImage" alt="얼음 성의 문 앞에 선 루미아와 피코" src="assets/scene-01.webp">
@@ -530,7 +542,6 @@ body[data-chapter="7"] #content.boss-spell-layout>#bossSpells[hidden]{display:no
   </main>
 <section class="rune-study" id="runeStudy" role="dialog" aria-modal="true" aria-labelledby="runeStudyTitle" hidden></section>
 <section class="kingdom-map" id="kingdomMap" aria-label="상태 왕국 지도" hidden></section>
-<button id="mapReturn" type="button" onclick="returnToKingdomMap()" aria-label="왕국 지도로 돌아가기" hidden>왕국 지도</button>
 </div>
 <script>
 const ASSETS={bossSealVapor:'assets/bossSealVapor-02.webp',bossBound:'assets/bossBound-03.webp',bossCelebration:'assets/bossCelebration-04.webp',bossIceStart:'assets/bossIceStart-05.webp',bossWaterBarrier:'assets/bossWaterBarrier-06.webp',bossDrops:'assets/bossDrops-07.webp',bossFrozenCrystal:'assets/bossFrozenCrystal-08.webp',bossVioletGas:'assets/bossVioletGas-09.webp',worldMapNew:'assets/worldMapNew-10.webp',crystalRestored:'assets/crystalRestored-11.webp',crystalChasm:'assets/crystalChasm-12.webp',crystalBridge:'assets/crystalBridge-13.webp',forestEntrance:"assets/forestEntrance-14.webp",crystalMine:"assets/crystalMine-15.webp",crystalGolem:"assets/crystalGolem-16.webp",starTempleEmpty:"assets/starTempleEmpty-17.webp",starTempleBridge:"assets/starTempleBridge-18.webp",starSpirit:"assets/starSpirit-19.webp",bossMain:"assets/bossMain-20.webp",bossIceWater:"assets/bossIceWater-21.webp",bossVaporLiquid:"assets/bossVaporLiquid-22.webp",bossCrystalGas:"assets/bossCrystalGas-23.webp",bossVictory:"assets/bossVictory-24.webp",violetSpirit:"assets/violetSpirit-25.webp",forestBarrierFree:"assets/forestBarrierFree-26.webp",forestBarrier:"assets/forestBarrier-27.webp",inventoryWandCard:"assets/inventoryWandCard-28.png",inventoryLensCard:"assets/inventoryLensCard-29.png",cloudBeading:"assets/cloudBeading-30.webp",inventoryFrame:"assets/inventoryFrame-31.webp",potionSource:"assets/potionSource-32.webp",potionSealed:"assets/potionSealed-33.webp",forestScent:"assets/forestScent-34.webp",forestFlood:"assets/forestFlood-35.webp",forestButterfly:"assets/forestButterfly-36.webp",cloudDry:"assets/cloudDry-37.webp",cloudFlow:"assets/cloudFlow-38.webp",cloudDrake:"assets/cloudDrake-39.webp",forestCleared:"assets/forestCleared-40.webp",mimicEscapeArt:'assets/mimicEscapeArt-41.webp',kingdomCalamity:'assets/kingdomCalamity-42.webp',slimeEncounterArt:'assets/slimeEncounterArt-43.webp',mimicEncounterArt:'assets/mimicEncounterArt-44.webp',worldMap:'assets/worldMap-45.webp',lakeArrival:'assets/lakeArrival-46.webp',lakeOpen:'assets/lakeOpen-47.webp',lakeFreezing:'assets/lakeFreezing-48.webp',lakeFrozen:'assets/lakeFrozen-49.webp',lakeCrossing:'assets/lakeCrossing-50.webp',mimicLiquid:'assets/mimicLiquid-51.webp',mimicSolid:'assets/mimicSolid-52.webp',runeFreeze:'assets/runeFreeze-53.webp',particleGuard:'assets/particleGuard-54.webp',particleRelaxed:'assets/particleRelaxed-55.webp',slimeMelt:'assets/slimeMelt-56.webp',wandIcon:'assets/wandIcon-57.webp',inventoryBar:'assets/inventoryBar-58.webp',lensIcon:'assets/lensIcon-59.webp',doorOpened:'assets/doorOpened-60.webp',doorPov:'assets/doorPov-61.webp',magicWand:'assets/magicWand-62.webp',particleSpirit:'assets/particleSpirit-63.webp',academyLumia:'assets/academyLumia-64.webp',academy:'assets/academy-65.webp',departure:'assets/departure-66.webp',ignis:'assets/ignis-67.webp',aqua:'assets/aqua-68.webp',cryo:'assets/cryo-69.webp',terra:'assets/terra-70.webp',gate:'assets/scene-01.webp',close:'assets/close-71.webp',heat:'assets/heat-72.webp',melt:'assets/melt-73.webp',enter:'assets/enter-74.webp',slime:'assets/slime-75.webp',rune:'assets/rune-76.webp'};
@@ -615,7 +626,7 @@ function feedback(msg,error=false){content.querySelector('#feedback')?.remove();
 function lockChoices(){content.querySelectorAll('.choice,.check input').forEach(x=>x.disabled=true)}
 function appendNextOnce(id,label,handler){if(el(id))return;const b=document.createElement('button');b.id=id;b.type='button';b.className='next';b.textContent=label;b.addEventListener('click',()=>{if(b.disabled)return;b.disabled=true;handler()},{once:true});content.appendChild(b)}
 
-function storySequence(options,lines,onDone){let index=0;const render=()=>{const line=lines[index];setScene({...options,alt:options.title,html:`<div class="story-bubble ${line.caption?'story-caption':''}">${line.caption?'':`<div class="speaker">${esc(line.speaker)}</div>`}<p class="dialogue">${line.caption?esc(line.text):`“${esc(line.text)}”`}</p></div><button class="next story-next" type="button" aria-label="${index===lines.length-1?'이야기를 마치고 계속하기':'다음 대사 보기'}"><span aria-hidden="true">❯</span></button>`});content.querySelector('.next').addEventListener('click',event=>{const node=content.querySelector('.dialogue'),run=speechRuns.get(node);if(run?.running){clearInterval(run.timer);run.timer=null;run.running=false;node.textContent=run.full;return}event.currentTarget.disabled=true;index++;if(index<lines.length)render();else onDone()})};render()}
+function storySequence(options,lines,onDone){let index=0;const render=()=>{const line=lines[index];setScene({...options,alt:options.title,html:`<div class="story-bubble ${line.caption?'story-caption':''}">${line.caption?'':`<div class="speaker">${esc(line.speaker)}</div>`}<p class="dialogue">${line.caption?esc(line.text):`“${esc(line.text)}”`}</p><button class="next story-next" type="button" aria-label="${index===lines.length-1?'이야기를 마치고 계속하기':'다음 대사 보기'}"><span aria-hidden="true">❯</span></button></div>`});content.querySelector('.next').addEventListener('click',event=>{const node=content.querySelector('.dialogue'),run=speechRuns.get(node);if(run?.running){clearInterval(run.timer);run.timer=null;run.running=false;node.textContent=run.full;return}event.currentTarget.disabled=true;index++;if(index<lines.length)render();else onDone()})};render()}
 
 function prologueStart(){setChapter('프롤로그 · 상태 마법 수련학교');storySequence({image:ASSETS.academyLumia,title:'왕국으로 떠나기 전, 수련학교로 가자.',scene:0,prologue:true},[{speaker:'루미아',text:'왕국에서 보낸 부탁을 들었지? 룬을 되찾으려면 어떤 변화가 필요한지 먼저 알아야 해. 수련학교에서 정령을 보는 방법부터 익히자.'},{speaker:'피코',text:'도구도 챙기고 함께할 친구들도 만나자! 준비를 마치면 북쪽 얼음 성으로 떠나는 거야.'}],meetHelpers)}
 function meetHelpers(){setScene({image:ASSETS.academy,alt:'이름표와 함께 소개되는 네 명의 상태 마법 견습생',title:'이번 여정의 조력자들을 만나자.',scene:0,prologue:true,cast:['ignis','aqua','cryo','terra'],castMode:'roster',html:`<div><div class="speaker">루미아</div><p class="dialogue">“이번 여행은 혼자가 아니야. 각자 다른 상태 마법을 수련한 친구들이 필요한 순간에 힘을 보태 줄 거야.”</p></div><div class="choices"><button class="choice" onclick="lensTutorial()">입자 렌즈 훈련 시작</button></div>`})}
@@ -923,8 +934,6 @@ function fitSceneGeometry(){
  }
  if(casting)lastCastingGeometry=key;
 }
-function dockStoryArrow(){const arrow=content.querySelector(':scope>.story-next'),bubble=content.querySelector(':scope>.story-bubble');if(arrow&&bubble)bubble.appendChild(arrow);scheduleGeometry()}
-new MutationObserver(dockStoryArrow).observe(content,{childList:true,subtree:true});
 function shuffleJudgmentChoices(){
  for(const group of content.querySelectorAll('.choices:not(.spell-choices)')){
   if(group.dataset.choiceShuffled)continue;
